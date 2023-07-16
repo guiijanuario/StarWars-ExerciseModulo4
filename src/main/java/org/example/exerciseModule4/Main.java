@@ -73,7 +73,7 @@ public class Main {
 
                                 System.out.println("2. Adicionar um Rebelde");
 
-                                rebelService.addRebel("Luke Skywalker", 28, "Masculino", "Tatooine",true);
+                                rebelService.addRebel("Luke Skywalker", 28, "Masculino", "Tatooine","aliado");
 
                                 break;
                             case 3:
@@ -108,7 +108,33 @@ public class Main {
                     System.out.println("4. Relatórios");
                     break;
                 case 5:
-                    System.out.println("5. Reportar Traidor");
+
+                    System.out.println("\n                                      ´                               ");
+                    System.out.println("||||||||   ||||||||        ||        ||   ||||||        ||||     ||||||||");
+                    System.out.println("   ||      ||    ||       ||||       ||   ||   ||      ||   ||   ||    ||");
+                    System.out.println("   ||      ||||||||      ||  ||      ||   ||     ||   ||    ||   ||||||||");
+                    System.out.println("   ||      ||||         ||| | ||     ||   ||     ||   ||    ||   ||||    ");
+                    System.out.println("   ||      ||  ||      ||      ||    ||   ||    ||     ||  ||    ||  ||  ");
+                    System.out.println("   ||      ||    ||   ||        ||   ||   ||||||        ||||     ||    ||\n");
+
+
+                    System.out.println("| Você deseja listar os Rebeldes cadastrados? |\n 1 - Sim \n 2 - Não");
+                    System.out.print("-> ");
+                    int listaRebelde = new Scanner(System.in).nextInt();
+
+                    if (listaRebelde == 1){
+                        System.out.println("\n==== Lista dos Rebeldes cadastrados ====");
+                        rebelService.queryAllRebelData();
+
+                        System.out.println("Reportar um traidor:");
+                        Long id = new Scanner(System.in).nextLong();
+                        rebelService.reportRebel(id);
+                    } else {
+                        System.out.println("Reportar um traidor:");
+                        Long id = new Scanner(System.in).nextLong();
+                        rebelService.reportRebel(id);
+                    }
+
                     break;
                 case 6:
                     System.out.println("Saindo do programa...");

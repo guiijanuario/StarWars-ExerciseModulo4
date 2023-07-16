@@ -1,14 +1,14 @@
 package org.example.exerciseModule4.model;
 
-public class Personagem {
+public class Character {
     private Long id;
     private String name;
     private int age;
     private String gender;
     private String location;
-    private boolean status;
+    private String status;
 
-    public Personagem(Long id, String name, int age, String gender, String location, boolean status) {
+    public Character(Long id, String name, int age, String gender, String location, String status) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -17,7 +17,7 @@ public class Personagem {
         this.status = status;
     }
 
-    public Personagem(String name, int age, String gender, String location, boolean status) {
+    public Character(String name, int age, String gender, String location, String status) {
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -63,5 +63,13 @@ public class Personagem {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

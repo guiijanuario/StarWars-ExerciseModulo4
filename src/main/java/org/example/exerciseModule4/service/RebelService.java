@@ -32,7 +32,7 @@ public class RebelService {
                     int age = resultSet.getInt("age");
                     String gender = resultSet.getString("gender");
                     String location = resultSet.getString("location");
-                    boolean status = resultSet.getBoolean("status");
+                    String status = resultSet.getString("status");
 
                     System.out.println("-----------------------");
                     System.out.println("ID: " + id);
@@ -52,7 +52,7 @@ public class RebelService {
         }
     }
 
-    public void addRebel(String name, int age, String gender, String location, boolean status) {
+    public void addRebel(String name, int age, String gender, String location, String status) {
         try {
             if (connection != null) {
                 sql = "INSERT INTO rebels (name, age, gender, location, status) VALUES (?, ?, ?, ?, ?)";
@@ -62,7 +62,7 @@ public class RebelService {
                 preparedStatement.setInt(2, age);
                 preparedStatement.setString(3, gender);
                 preparedStatement.setString(4, location);
-                preparedStatement.setBoolean(5, status);
+                preparedStatement.setString(5, status);
 
                 int checkIfAdded = preparedStatement.executeUpdate();
 
@@ -79,11 +79,9 @@ public class RebelService {
         }
     }
 
-    public Rebel addRebelObj(String name, int age, String gender, String location, boolean status){
+    public Rebel addRebelObj(String name, int age, String gender, String location, String status){
         return new Rebel(name, age, gender,location, status);
     }
-
-
 
     public void deleteRebel(Long id) {
         try {
@@ -108,22 +106,87 @@ public class RebelService {
         }
     }
 
-    public void changeRebelLocation(Long id, String newLocation) {
+    public void reportRebel(Long id) {
         try {
             if (connection != null) {
-                sql = "UPDATE rebels SET newLocation = ? WHERE id = ?";
+                // Verifica se o rebelde está na tabela traitors
+                sql = "SELECT id FROM traitors WHERE id_rebel = ?";
                 preparedStatement = connection.prepareStatement(sql);
 
-                preparedStatement.setString(1, newLocation);
+                preparedStatement.setLong(1, id);
 
-                int rowsAffected = statement.executeUpdate(sql);
+                resultSet = preparedStatement.executeQuery();
 
-                if (rowsAffected > 0) {
-                    System.out.println("==== Dado alterado com sucesso! ====");
+                if (resultSet.next()) {
+                    // Se o rebelde estiver na tabela traitors, atualiza o número de warnings
+                    sql = "UPDATE traitors SET warnings = warnings + 1 WHERE id_rebel = ?";
+                    preparedStatement = connection.prepareStatement(sql);
+
+                    preparedStatement.setLong(1, id);
+
+                    preparedStatement.executeUpdate();
+
+                    // Verifica se o número de warnings é igual a 3
+                    sql = "SELECT warnings FROM traitors WHERE id_rebel = ?";
+                    preparedStatement = connection.prepareStatement(sql);
+
+                    preparedStatement.setLong(1, id);
+
+                    resultSet = preparedStatement.executeQuery();
+
+                    if (resultSet.next()) {
+                        int warnings = resultSet.getInt("warnings");
+
+                        // Se o número de warnings for igual a 3, atualiza o status do rebelde para 'traidor'
+                        if (warnings == 3) {
+                            sql = "UPDATE rebels SET status = 'traidor' WHERE id = ?";
+                            preparedStatement = connection.prepareStatement(sql);
+
+                            preparedStatement.setLong(1, id);
+
+                            preparedStatement.executeUpdate();
+                            System.out.println("\n ---- Ele virou um traidor por já somar 3 denuncias ----");
+
+
+                            // Imprime os dados do traidor na tela
+                            sql = "SELECT id, name, age, gender, location, status FROM rebels WHERE id = ?";
+                            preparedStatement = connection.prepareStatement(sql);
+
+                            preparedStatement.setLong(1, id);
+
+                            resultSet = preparedStatement.executeQuery();
+
+                            if (resultSet.next()) {
+
+                                Long idRebelde = resultSet.getLong("id");
+                                String name = resultSet.getString("name");
+                                int age = resultSet.getInt("age");
+                                String gender = resultSet.getString("gender");
+                                String location = resultSet.getString("location");
+                                String status = resultSet.getString("status");
+
+                                System.out.println("\nID: " + idRebelde);
+                                System.out.println("Nome: " + name);
+                                System.out.println("Idade: " + age);
+                                System.out.println("Gênero: " + gender);
+                                System.out.println("Localização: " + location);
+                                System.out.println("Status: " + status);
+                                System.out.println("-----------------------");
+                            }
+                        } else if (warnings >= 4) {
+                            System.out.println("Ele já é um traidor, tem mais de 3 denuncias.");
+                        }
+                    }
                 } else {
-                    System.out.println("==== Nenhum dado encontrado com o ID informado. ====");
+                    // Se o rebelde não estiver na tabela traitors, cria um novo registro
+                    sql = "INSERT INTO traitors (id_rebel, warnings) VALUES (?, ?)";
+                    preparedStatement = connection.prepareStatement(sql);
+
+                    preparedStatement.setLong(1, id);
+                    preparedStatement.setInt(2, 1);
+
+                    preparedStatement.executeUpdate();
                 }
-                statement.close();
             }
         } catch (SQLException e) {
             System.out.println("[Error] Não foi possível alterar os dados do Rebelde");
@@ -155,4 +218,5 @@ public class RebelService {
             e.printStackTrace();
         }
     }
+
 }

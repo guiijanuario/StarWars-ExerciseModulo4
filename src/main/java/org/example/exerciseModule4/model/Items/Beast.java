@@ -1,11 +1,11 @@
 package org.example.exerciseModule4.model.Items;
 
-public class Gun extends Items{
+public class Beast extends Items{
 
     private int maximumAmmoAmount;
     private int damage;
     private int durability;
-    public Gun(String name, int maximumAmmoAmount, int damage, int durability) {
+    public Beast(String name, int maximumAmmoAmount, int damage, int durability) {
         super(name);
         this.maximumAmmoAmount = maximumAmmoAmount;
         this.damage = damage;
