@@ -4,8 +4,7 @@ import org.example.exerciseModule4.connection.ConnectionDataBase;
 import org.example.exerciseModule4.model.Rebel;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class RebelService {
 
@@ -15,7 +14,6 @@ public class RebelService {
     ResultSet resultSet = null;
     String sql = "";
 
-    List<Rebel> rebels = new ArrayList<>();
 
     public void queryAllRebelData() {
 
@@ -42,8 +40,6 @@ public class RebelService {
                     System.out.println("Localização: " + location);
                     System.out.println("Status: " + status);
                     System.out.println("-----------------------");
-
-                    rebels.add(new Rebel(id, name, age, gender, location, status));
                 }
             }
         } catch (SQLException e) {
@@ -193,6 +189,52 @@ public class RebelService {
             e.printStackTrace();
         }
     }
+
+    public void updateLocation(Long id, String newLocation) {
+        try {
+            if (connection != null) {
+                // Obtém a localização antiga do rebelde
+                sql = "SELECT location FROM rebels WHERE id = ?";
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setLong(1, id);
+
+                resultSet = preparedStatement.executeQuery();
+
+
+                if (resultSet.next()) {
+                    String oldLocation = resultSet.getString("location");
+
+                    // Insere a localização antiga na tabela locations
+                    sql = "INSERT INTO locations (id_rebel, old_location, new_location) VALUES (?, ?, ?)";
+                    preparedStatement = connection.prepareStatement(sql);
+
+                    preparedStatement.setLong(1, id);
+                    preparedStatement.setString(2, oldLocation);
+                    preparedStatement.setString(3, newLocation);
+
+                    preparedStatement.executeUpdate();
+                }
+
+                // Atualiza a localização do rebelde na tabela rebels
+                sql = "UPDATE rebels SET location = ? WHERE id = ?";
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setString(1, newLocation);
+                preparedStatement.setLong(2, id);
+
+                preparedStatement.executeUpdate();
+
+
+                System.out.println(" === Localização alterada com sucesso ===");
+            }
+        } catch (SQLException e) {
+            System.out.println("[Error] Não foi possível atualizar a localização do rebelde");
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void changeRebelData(String newName, int newAge, String newGender) {
         try {

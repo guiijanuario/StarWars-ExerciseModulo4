@@ -1,6 +1,8 @@
 package org.example.exerciseModule4;
 
+import org.example.exerciseModule4.service.ItemService;
 import org.example.exerciseModule4.service.RebelService;
+import org.example.exerciseModule4.service.StoreService;
 
 import java.util.Scanner;
 
@@ -10,6 +12,8 @@ public class Main {
     public static void main(String[] args) {
 
         RebelService rebelService = new RebelService();
+        ItemService itemService = new ItemService();
+        StoreService storeService = new StoreService();
 
         System.out.print("============================================================\n");
         System.out.print("|                                                          |\n");
@@ -78,6 +82,33 @@ public class Main {
                                 break;
                             case 3:
                                 System.out.println("3. Mudar Localização Rebelde");
+
+                                System.out.println("| Você deseja listar os Rebeldes cadastrados? |\n 1 - Sim \n 2 - Não");
+                                System.out.print("-> ");
+                                int listaRebelde = new Scanner(System.in).nextInt();
+
+                                if (listaRebelde == 1){
+                                    System.out.println("\n==== Lista dos Rebeldes cadastrados ====");
+                                    rebelService.queryAllRebelData();
+
+                                    System.out.println("Digite o ID do Rebelde:");
+                                    Long id = new Scanner(System.in).nextLong();
+                                    rebelService.reportRebel(id);
+
+                                    System.out.println("Digite a nova Localização:");
+                                    String newLocation =  new Scanner(System.in).nextLine();
+
+                                    rebelService.updateLocation(id, newLocation);
+                                } else {
+                                    System.out.println("Digite o ID do Rebelde:");
+                                    Long id = new Scanner(System.in).nextLong();
+
+                                    System.out.println("Digite a nova Localização:");
+                                    String newLocation =  new Scanner(System.in).nextLine();
+
+                                    rebelService.updateLocation(id, newLocation);
+                                }
+
                                 break;
                             case 4:
                                 System.out.println("4. Deletar um Rebelde");
@@ -99,13 +130,76 @@ public class Main {
                     } while (opcaoMenuGestao != 5);
                     break;
                 case 2:
-                    System.out.println("2. Base de compras");
+                    System.out.println("---------------------------------");
+                    System.out.println("  Bem vindo a base de compras");
+                    System.out.println("---------------------------------");
+
+                    itemService.queryAllItemsData();
+
+                    int opcaoMenuBaseCompras;
+                    do {
+
+                        System.out.println("1 - Ver lista de items disponível para compra");
+                        System.out.println("2 - Ver lista de Rebeldes cadastrados");
+                        System.out.println("3 - Realizar compra");
+                        System.out.println("4 - Ver as compras realizadas");
+                        System.out.println("5 - Sair");
+                        opcaoMenuBaseCompras = new Scanner(System.in).nextInt();
+
+                        switch (opcaoMenuBaseCompras) {
+                            case 1:
+                                System.out.println("1. Listar todos os items disponível para compra");
+                                itemService.queryAllItemsData();
+
+                                break;
+                            case 2:
+
+                                System.out.println("2. Lista de Rebeldes cadastrados");
+                                rebelService.queryAllRebelData();
+
+                                break;
+                            case 3:
+                                System.out.println("3 - Realizar compra");
+
+                                System.out.println("Digite o ID do Rebelde: ");
+                                int idRebel = new Scanner(System.in).nextInt();
+
+                                System.out.println("Digite o ID do Item: ");
+                                int idItem = new Scanner(System.in).nextInt();
+
+                                System.out.println("Digite a quantidade do item: ");
+                                int quantityItem = new Scanner(System.in).nextInt();
+
+                                System.out.println("Digite o valor da venda: ");
+                                double saleValue = new Scanner(System.in).nextDouble();
+
+                                storeService.buyItems(idRebel, idItem, quantityItem, saleValue);
+
+                                break;
+                            case 4:
+                                System.out.println("4 - Ver as compras realizadas");
+
+                                storeService.listSales();
+                                break;
+                            case 5:
+                                System.out.println("Saindo do programa...");
+                                break;
+                            default:
+                                System.out.println("Opção inválida. Tente novamente.");
+                        }
+                    } while (opcaoMenuBaseCompras != 5);
+
                     break;
                 case 3:
                     System.out.println("3. Área do Rebelde");
                     break;
                 case 4:
                     System.out.println("4. Relatórios");
+
+                    System.out.println("Essa é a porcentagem de Rebelde");
+
+                    System.out.println("Essa é a porcentagem de Traidores");
+
                     break;
                 case 5:
 
