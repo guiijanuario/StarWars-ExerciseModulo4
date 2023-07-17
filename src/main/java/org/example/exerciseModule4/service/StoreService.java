@@ -11,27 +11,41 @@ public class StoreService {
     ResultSet resultSet = null;
     String sql = "";
 
-    public boolean buyItems(int rebelId, int itemId, int quantity, double price) {
+    public void buyItems(int rebelId, int itemId, int quantity, double price) {
+
         try {
             if (connection != null) {
-                sql = "INSERT INTO purchases (rebel_id, item_id, quantity, price) VALUES (?, ?, ?, ?)";
-                preparedStatement = connection.prepareStatement(sql);
 
-                preparedStatement.setInt(1, rebelId);
-                preparedStatement.setInt(2, itemId);
-                preparedStatement.setInt(3, quantity);
-                preparedStatement.setDouble(4, price);
+                sql = "SELECT * FROM rebels WHERE id = " + rebelId;
+                Statement statement = connection.createStatement();
 
-                preparedStatement.executeUpdate();
+                ResultSet resultSet = statement.executeQuery(sql);
 
-                return preparedStatement.getUpdateCount() > 0;
+                while (resultSet.next()) {
+                    if(resultSet.getString("status").equals("traidor")) {
+                        System.out.println("--------------------------------------------");
+                        System.out.println(" Atenção: Ele é um traidor não pode comprar");
+                        System.out.println("--------------------------------------------");
+                    }else {
+                        sql = "INSERT INTO purchases (rebel_id, item_id, quantity, price) VALUES (?, ?, ?, ?)";
+                        preparedStatement = connection.prepareStatement(sql);
+
+                        preparedStatement.setInt(1, rebelId);
+                        preparedStatement.setInt(2, itemId);
+                        preparedStatement.setInt(3, quantity);
+                        preparedStatement.setDouble(4, price);
+
+                        preparedStatement.executeUpdate();
+
+                        preparedStatement.getUpdateCount();
+                    }
+                }
             }
         } catch (SQLException e) {
             System.out.println("[Error] Não foi possível realizar a compra");
             e.printStackTrace();
         }
 
-        return false;
     }
 
     public void listSales() {

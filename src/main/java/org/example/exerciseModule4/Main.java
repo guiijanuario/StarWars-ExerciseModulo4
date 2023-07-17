@@ -1,19 +1,17 @@
 package org.example.exerciseModule4;
 
-import org.example.exerciseModule4.service.ItemService;
-import org.example.exerciseModule4.service.RebelService;
-import org.example.exerciseModule4.service.StoreService;
+import org.example.exerciseModule4.service.*;
 
 import java.util.Scanner;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
 
         RebelService rebelService = new RebelService();
         ItemService itemService = new ItemService();
         StoreService storeService = new StoreService();
+        ReportsService reportsService = new ReportsService();
+        InventoryService inventory = new InventoryService();
 
         System.out.print("============================================================\n");
         System.out.print("|                                                          |\n");
@@ -69,21 +67,45 @@ public class Main {
 
                         switch (opcaoMenuGestao) {
                             case 1:
-                                System.out.println("1. Listar todos Rebeldes");
+                                System.out.println("Listar todos Rebeldes");
                                 rebelService.queryAllRebelData();
 
                                 break;
                             case 2:
+                                System.out.println("----------------------");
+                                System.out.println("Adicionar um Rebelde");
+                                System.out.println("----------------------");
 
-                                System.out.println("2. Adicionar um Rebelde");
+                                System.out.println("\nDigite o nome do Rebelde:");
+                                String nameRebel = new Scanner(System.in).nextLine();
 
-                                rebelService.addRebel("Luke Skywalker", 28, "Masculino", "Tatooine","aliado");
+                                System.out.println("\nDigite a idade:");
+                                int ageRebel = new Scanner(System.in).nextInt();
 
+                                System.out.println("\nDigite o Gênero:");
+                                String genderRebel = new Scanner(System.in).nextLine();
+
+                                System.out.println("\nDigite a localização:");
+                                String locationRebel = new Scanner(System.in).nextLine();
+
+                                System.out.println("\nDigite se ele é aliado ou traidor: 1 - Aliado \n 2 - Traidor");
+                                int statusLabel = new Scanner(System.in).nextInt();
+
+                                String statusExato = "";
+                                if (statusLabel == 1){
+                                    statusExato = "aliado";
+                                } else {
+                                    statusExato = "traidor";
+                                }
+
+                                rebelService.addRebel(nameRebel, ageRebel, genderRebel, locationRebel,statusExato);
                                 break;
                             case 3:
-                                System.out.println("3. Mudar Localização Rebelde");
+                                System.out.println("---------------------------");
+                                System.out.println("Mudar Localização Rebelde");
+                                System.out.println("---------------------------");
 
-                                System.out.println("| Você deseja listar os Rebeldes cadastrados? |\n 1 - Sim \n 2 - Não");
+                                System.out.println("--- Você deseja listar os Rebeldes cadastrados? ---\n 1 - Sim \n 2 - Não");
                                 System.out.print("-> ");
                                 int listaRebelde = new Scanner(System.in).nextInt();
 
@@ -111,7 +133,9 @@ public class Main {
 
                                 break;
                             case 4:
-                                System.out.println("4. Deletar um Rebelde");
+                                System.out.println("---------------------------");
+                                System.out.println("   Deletar um Rebelde");
+                                System.out.println("---------------------------");
 
                                 System.out.println("==== Lista dos Rebeldes cadastrados ====");
                                 rebelService.queryAllRebelData();
@@ -130,9 +154,12 @@ public class Main {
                     } while (opcaoMenuGestao != 5);
                     break;
                 case 2:
-                    System.out.println("---------------------------------");
-                    System.out.println("  Bem vindo a base de compras");
-                    System.out.println("---------------------------------");
+                    System.out.println("\n||| |||  ||||||||   ||||||||   |||||||        ||         |||||      ||||||");
+                    System.out.println("||| |||  ||         ||    ||  ||             ||||       ||    |    ||    ||");
+                    System.out.println("|| | ||  ||         ||||||||  ||            ||  ||      ||     |   ||    ||");
+                    System.out.println("|| | ||  |||||||    ||||      ||           || || ||     ||     |   ||    ||");
+                    System.out.println("||   ||  ||         ||  ||    ||          ||      ||    ||    |    ||    ||");
+                    System.out.println("||   ||  |||||||    ||    ||   |||||||   ||        ||    |||||      ||||||\n");
 
                     itemService.queryAllItemsData();
 
@@ -148,18 +175,24 @@ public class Main {
 
                         switch (opcaoMenuBaseCompras) {
                             case 1:
-                                System.out.println("1. Listar todos os items disponível para compra");
+
+                                System.out.println("----------------------------------------------------");
+                                System.out.println("--- Listar todos os items disponível para compra ---");
+                                System.out.println("----------------------------------------------------");
                                 itemService.queryAllItemsData();
 
                                 break;
                             case 2:
-
-                                System.out.println("2. Lista de Rebeldes cadastrados");
+                                System.out.println("-----------------------------------");
+                                System.out.println("-- Lista de Rebeldes cadastrados --");
+                                System.out.println("-----------------------------------");
                                 rebelService.queryAllRebelData();
 
                                 break;
                             case 3:
-                                System.out.println("3 - Realizar compra");
+                                System.out.println("-------------------------");
+                                System.out.println("---- Realizar compra ----");
+                                System.out.println("-------------------------");
 
                                 System.out.println("Digite o ID do Rebelde: ");
                                 int idRebel = new Scanner(System.in).nextInt();
@@ -177,7 +210,9 @@ public class Main {
 
                                 break;
                             case 4:
-                                System.out.println("4 - Ver as compras realizadas");
+                                System.out.println("---------------------------------");
+                                System.out.println("--- Ver as compras realizadas ---");
+                                System.out.println("---------------------------------");
 
                                 storeService.listSales();
                                 break;
@@ -191,19 +226,31 @@ public class Main {
 
                     break;
                 case 3:
-                    System.out.println("3. Área do Rebelde");
+                    System.out.println("-----------------------");
+                    System.out.println("--- Área do Rebelde ---");
+                    System.out.println("-----------------------");
+
+                    System.out.printf("Digite o ID do Rebelde no qual deseja visualizar o inventário: ");
+                    Long id_rebel = new Scanner(System.in).nextLong();
+                    inventory.updateInventoryFromPurchases(id_rebel);
+
                     break;
                 case 4:
-                    System.out.println("4. Relatórios");
 
-                    System.out.println("Essa é a porcentagem de Rebelde");
+                    System.out.println("\n                                                              ||                            ");
+                    System.out.println("||||||||   ||||||||   ||              ||        ||||||||    ||||||    ||||||||   ||    |||||| ");
+                    System.out.println("||    ||   ||         ||             ||||          ||      ||    ||   ||    ||   ||   ||    ||");
+                    System.out.println("||||||||   ||         ||            ||  ||         ||      ||    ||   ||||||||   ||   ||    ||");
+                    System.out.println("||||       ||||||||   ||           || || ||        ||      ||    ||   ||||       ||   ||    ||");
+                    System.out.println("||  ||     ||         ||          ||      ||       ||      ||    ||   ||  ||     ||   ||    ||");
+                    System.out.println("||    ||   ||||||||   ||||||||   ||        ||      ||       ||||||    ||    ||   ||    |||||| \n");
 
-                    System.out.println("Essa é a porcentagem de Traidores");
+                    reportsService.reportsPorcent();
 
                     break;
                 case 5:
 
-                    System.out.println("\n                                      ´                               ");
+                    System.out.println("\n                                     |                               ");
                     System.out.println("||||||||   ||||||||        ||        ||   ||||||        ||||     ||||||||");
                     System.out.println("   ||      ||    ||       ||||       ||   ||   ||      ||   ||   ||    ||");
                     System.out.println("   ||      ||||||||      ||  ||      ||   ||     ||   ||    ||   ||||||||");
@@ -237,6 +284,5 @@ public class Main {
                     System.out.println("Opção inválida. Tente novamente.");
             }
         } while (opcaoMenuPrincipal != 6);
-
     }
 }
